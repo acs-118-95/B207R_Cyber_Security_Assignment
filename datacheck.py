@@ -21,3 +21,8 @@ print(data.isnull().sum())
 # Checking the number of safe and phishing emails
 print("\nNumber of safe and phishing emails:")
 print(data["Email Type"].value_counts())
+
+# Checking the number of duplicate rows after removing missing values
+dwo_miss = data.dropna(subset=["Email Text"])
+print("\nNumber of duplicate rows:")
+print(dwo_miss.duplicated(subset=["Email Text"]).sum())
