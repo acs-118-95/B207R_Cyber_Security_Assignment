@@ -2,6 +2,7 @@ import pandas
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 # Loading the dataset and checking the first five rows.
 data = pandas.read_csv("data/emails.csv")
@@ -49,3 +50,32 @@ prdct_label = model.predict(te_text_conv)
 # Comparing predicted label to actual label
 print(f"\nFirst five predicted labels: {prdct_label [:5]}")
 print(f"\nFirst five actual labels: \n{test_label.head()}")
+
+# Calculating accuracy, precision, recall, and F1 score
+accuracy = accuracy_score(test_label, prdct_label)
+precision = precision_score(test_label, prdct_label)
+recall = recall_score(test_label, prdct_label)
+f1 = f1_score(test_label, prdct_label)
+
+print("\nModel evaluation results:")
+print(f"Accuracy: {round((accuracy)*100, 2)}%")
+print(f"Precision: {round((precision)*100, 2)}%")
+print(f"Recall: {round((recall)*100, 2)}%")
+print(f"F1 Score: {round((f1)*100, 2)}%")
+
+# Taking an email as user input
+new_mail = input("\nEnter an email to check: ")
+
+# Converting that email into numbers
+new_mail_conv = converter.transform([new_mail])
+
+# Making a prediction for the new email
+new_predict = model.predict(new_mail_conv)
+
+if new_predict[0] == 0:
+    f_predict = "Safe Email"
+    print(f"\nThe email is predicted to be: {f_predict}")
+else:
+    f_predict = "Phishing Email"
+    print(f"\nThe email is predicted to be: {f_predict}")
+    
