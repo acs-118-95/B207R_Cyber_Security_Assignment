@@ -1,4 +1,5 @@
 import pandas
+import sqlite3
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -66,6 +67,11 @@ print(f"F1 Score: {round((f1)*100, 2)}%")
 # Taking an email as user input
 new_mail = input("\nEnter an email to check: ")
 
+# Checking whether the user input is empty
+if new_mail.strip() == "":
+    print("Please enter an email message.")
+    exit()
+    
 # Converting that email into numbers
 new_mail_conv = converter.transform([new_mail])
 
@@ -78,4 +84,11 @@ if new_predict[0] == 0:
 else:
     f_predict = "Phishing Email"
     print(f"\nThe email is predicted to be: {f_predict}")
-    
+
+# Saving the mail and its prediction into the SQLite database
+db = sqlite3.connect("database/results.db")
+command = db.cursor()
+command.execute("INSERT INTO prediction_results (email_text, prediction) VALUES (?, ?)", (new_mail, f_predict))
+db.commit()
+db.close()
+print("\nThe email and its prediction have been saved into the database.")
